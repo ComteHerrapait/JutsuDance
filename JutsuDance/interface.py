@@ -15,3 +15,6 @@ if __name__ == "__main__":
     window = Interface()
     window.show()
     sys.exit(app.exec_())
+
+#   lien vers un exemple pour afficher une image
+#   https://gist.github.com/bsdnoobz/8464000
