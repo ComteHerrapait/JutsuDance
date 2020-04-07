@@ -13,11 +13,10 @@ def acq(space, height=480,width=640):
     webcam = cv2.VideoCapture(0)
     webcam.set(4,height) # 4 : format de l'image en hauteur
     webcam.set(3,width) # 3 : format de l'image en largeur
-    check, frame = webcam.read()
-    cv2.imwrite(filename='saved_img.jpg', img=frame)
+    check, img = webcam.read()
+
     webcam.release() # On stop l'utilisation de la caméra
-    img = cv2.imread('saved_img.jpg', cv2.IMREAD_COLOR)
-    os.remove('saved_img.jpg') # On supprime l'image enregistrée
+
     if space=='HSV':
         imgHSV=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         return(imgHSV)

@@ -17,14 +17,10 @@ class Interface(QtWidgets.QMainWindow):
         self.timer.timeout.connect(self.update)
         self.timer.start(30)
 
-    def acquisition(self):
-        """ recupère une image depuis la camera avec le module acquisition"""
-        return acq("RGB")
-
     def update(self):
         """ mets à jour l'affichage sur l'interface"""
         #affiche le flux de la caméra
-        frame = self.acquisition()
+        frame = acq("RGB")
         image = QtGui.QImage(frame, frame.shape[1], frame.shape[0],
                        frame.strides[0], QtGui.QImage.Format_RGB888)
         self.label.setPixmap(QtGui.QPixmap.fromImage(image))
