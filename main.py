@@ -2,9 +2,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5 import uic
-import cv2
 import sys
-import interaction
+
+from acquisition import *
+#exec("interaction.py")
 
 
 class Interface(QtWidgets.QMainWindow):
@@ -17,7 +18,7 @@ class Interface(QtWidgets.QMainWindow):
         self.timer.start(30)
 
     def acquisition(self):
-        return interaction.acq("LAB")
+        return acq("RGB")
 
     def update_camera(self):
         frame = self.acquisition()
