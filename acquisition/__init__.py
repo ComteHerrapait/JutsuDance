@@ -10,23 +10,27 @@ def acq(space, height=480,width=640):
     
     Retourne la matrice définissant l'image dans l'espace couleur et les dimensions indiqués
     """
-    webcam = cv2.VideoCapture(0)
-    webcam.set(4,height) # 4 : format de l'image en hauteur
-    webcam.set(3,width) # 3 : format de l'image en largeur
-    check, img = webcam.read()
 
-    webcam.release() # On stop l'utilisation de la caméra
+    #CAP_ANY correspond à la méthode de capture de l'image (backend)
+    webcam = cv2.VideoCapture(0, cv2.CAP_ANY)
 
-    if space=='HSV':
-        imgHSV=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        return(imgHSV)
-    if space=='LAB':
-        imgLAB=cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
-        return(imgLAB)
-    if space=='RGB' :
-        imgRGB=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        return(imgRGB)
-    return(img) # On renvoie l'image par défaut en BGR
+    if webcam.isOpened(): #on vérifie que la prise d'image a bien fonctionné
+
+        webcam.set(4,height) # 4 : format de l'image en hauteur
+        webcam.set(3,width) # 3 : format de l'image en largeur
+        check, img = webcam.read()
+        webcam.release() # On stop l'utilisation de la caméra
+
+        if space=='HSV':
+            imgHSV=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+            return(imgHSV)
+        if space=='LAB':
+            imgLAB=cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+            return(imgLAB)
+        if space=='RGB' :
+            imgRGB=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            return(imgRGB)
+        return(img) # On renvoie l'image par défaut en BGR
 
 
 def save(name,image):
