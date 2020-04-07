@@ -16,7 +16,10 @@ def acq(space, height=480,width=640): #'HSV' pour le format HSV et 'LAB' pour le
     if space=='LAB':
         imgLAB=cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
         return(imgLAB)
-    return()
+    if space=='RGB' :
+        imgRGB=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        return(imgRGB)
+    return(img)
 
 
 def save(name,image):
