@@ -1,8 +1,10 @@
 import cv2
 import os
 
-def acq(space): #'HSV' pour le format HSV et 'LAB' pour le format LAB
+def acq(space, height=480,width=640): #'HSV' pour le format HSV et 'LAB' pour le format LAB
     webcam = cv2.VideoCapture(0) 
+    webcam.set(4,height) # 4 : format de l'image en hauteur
+    webcam.set(3,width) # 3 : format de l'image en largeur
     check, frame = webcam.read()
     cv2.imwrite(filename='saved_img.jpg', img=frame)
     webcam.release()
@@ -16,7 +18,7 @@ def acq(space): #'HSV' pour le format HSV et 'LAB' pour le format LAB
         return(imgLAB)
     return()
 
-def save(rep,image):
-    cv2.imwrite(filename=(rep+'.jpg'), img=image)
-    return()
 
+def save(name,image):
+    cv2.imwrite(filename=(name+'.jpg'), img=image)
+    return()
