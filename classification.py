@@ -1,6 +1,8 @@
 import cv2 
 import numpy as np
-from scipy.spatial import distance
+from sklearn.cluster import MeanShift
+import matplotlib.pyplot as plt
+
 
 def classifier(image,classes):
     """Retourne la classe de l'image en paramètre"""
@@ -23,16 +25,26 @@ def segmenatationMain(image):
     if np.size(image)!=(512,512):
         image=cv2.resize(image,(512,512))
     imLab=cv2.cvtColor(image,cv2.COLOR_BGR2LAB)
-    imseg=cv2.pyrMeanShiftFiltering(imLab,30,20)
-    return(imseg)
+    ms=MeanShift(0.2)
+    ms.fit(imLab[:,:,1])
+    lblsAll=ms.labels_ 
+    cluster_centers=ms.cluster_centers_ #calcule les centres des classes
+    lbls=np.unique(lblsAll) #supprime les doublons
+    k=len(lbls) #nombre de classe
+    return(lblsAll,k,cluster_centers)
 
 image=cv2.imread('7.jpg')
-cv2.namedWindow('Input')
-cv2.resizeWindow('Input',512,512)
+#cv2.namedWindow('Input')
+#cv2.resizeWindow('Input',512,512)
 #image=cv2.resize(image,(512,512))
 #cv2.imshow("Input",image)
-imsegement=segmenatationMain(image)
-cv2.imshow('Input',imsegement)
+#imseg,k,centers=segmenatationMain(image)
+#cv2.imshow('Input',imseg)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+plt.imread('7.jpg')
+imseg,k,centers=segmenatationMain(image)
+plt.figure();
+plt.imshow(imseg)
+plt.show()
