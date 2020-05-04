@@ -7,7 +7,7 @@ Created on Tue Apr  7 17:03:52 2020
 
 import numpy as np 
 import cv2 
-   
+
   
 # read video 
 cap = cv2.VideoCapture(0) 
@@ -22,7 +22,7 @@ _, frame = cap.read()
 # set the region for the 
 # tracking window p, q, r, s 
 # put values according to yourself 
-p, q, r, s = 150, 150, 460, 100
+p, q, r, s = 150, 150, 400, 120
 track_window = (r, p, s, q) 
    
       
@@ -33,7 +33,7 @@ r_o_i = frame[p:p + q, r:r + s]
 hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) 
    
 # apply mask on the HSV frame 
-mask = cv2.inRange(hsv, np.array((0., 61., 33.)), np.array((180., 255., 255.))) 
+mask = cv2.inRange(hsv, np.array((0., 80., 33.)), np.array((180., 255., 255.))) 
   
 # get histogram for hsv channel 
 roi = cv2.calcHist([hsv], [0], mask, [180], [0, 180]) 
@@ -44,7 +44,7 @@ cv2.normalize(roi, roi, 0, 255, cv2.NORM_MINMAX)
 # termination criteria, either 15  
 # iteration or by at least 2 pt 
 termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 15, 2 ) 
-   
+
 while(True): 
     _, frame = cap.read() 
     frame = cv2.flip(frame, 1)
@@ -59,15 +59,15 @@ while(True):
     bp = cv2.calcBackProject([hsv], [0], roi, [0, 180], 1) 
    
     # applying meanshift to get the new region 
-    _, track_window = cv2.meanShift(bp, track_window, termination)
-    #ret, track_window = cv2.CamShift(bp, track_window, termination) 
+    #_, track_window = cv2.meanShift(bp, track_window, termination)
+    ret, track_window = cv2.CamShift(bp, track_window, termination) 
    
     # Draw track window on the frame 
-    x, y, w, h = track_window 
-    img2 = cv2.rectangle(frame, (x, y), (x + w*2, y + h*2), 255, 2) 
-    #pts = cv2.boxPoints(ret)
-    #pts = np.int0(pts)
-    #img2 = cv2.polylines(frame,[pts],True, 255,2)
+    #x, y, w, h = track_window 
+    #img2 = cv2.rectangle(frame, (x, y), (x + w*2, y + h*2), 255, 2) 
+    pts = cv2.boxPoints(ret)
+    pts = np.int0(pts)
+    img2 = cv2.polylines(frame,[pts],True, 255,2)
       
     # show results 
     cv2.imshow('tracker', img2)
@@ -76,7 +76,15 @@ while(True):
     if k == ord('q'):
         img_meanshift = cv2.imwrite(filename='saved_img-final_MS.jpg', img=img2)
         break
-          
+    if k == ord('m'):
+        x = min(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
+        y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
+        w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
+        h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
+        img3 = frame[y:h,x:w]
+        img_main = cv2.imwrite(filename='Image_main.jpg', img=img3)
+        break
+       
 # release cap object 
 cap.release() 
   
