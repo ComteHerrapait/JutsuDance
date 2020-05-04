@@ -13,6 +13,10 @@ class Interface(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("interface.ui", self)
+
+        #connection of button slot
+        self.pushButton.released.connect(lambda: self.camera.save("test",self.camera.acq("RGB")))
+
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
@@ -28,6 +32,10 @@ class Interface(QtWidgets.QMainWindow):
 
     def __del__(self):
         cv2.destroyAllWindows()
+
+    def button1(self):
+        self.camera.save("test",self.camera.acq("BGR"))
+
 
 if __name__ == "__main__":
     """Fonction MAIN """

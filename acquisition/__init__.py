@@ -52,7 +52,8 @@ class camera():
 
         Ne renvoie rien
         """
-        cv2.imwrite(filename=(name+'.jpg'), img=image)
+        imgBGR=cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        cv2.imwrite(filename=(name+'.jpg'), img=imgBGR)
 
     def __del__(self):
         """desructor"""
