@@ -219,3 +219,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/qt,python,opencv,windows,qtcreator
+*.user

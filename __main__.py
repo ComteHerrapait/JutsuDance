@@ -8,10 +8,11 @@ from acquisition import *
 
 
 class Interface(QtWidgets.QMainWindow):
+    camera = camera()
+
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("interface.ui", self)
-
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
@@ -20,10 +21,13 @@ class Interface(QtWidgets.QMainWindow):
     def update(self):
         """ mets à jour l'affichage sur l'interface"""
         #affiche le flux de la caméra
-        frame = acq("RGB")
+        frame = self.camera.acq("RGB")
         image = QtGui.QImage(frame, frame.shape[1], frame.shape[0],
                        frame.strides[0], QtGui.QImage.Format_RGB888)
         self.label.setPixmap(QtGui.QPixmap.fromImage(image))
+
+    def __del__(self):
+        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     """Fonction MAIN """
