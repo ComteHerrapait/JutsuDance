@@ -8,15 +8,15 @@ from acquisition import *
 
 
 class Interface(QtWidgets.QMainWindow):
-    camera = camera()
+    camera = Camera()
 
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("interface.ui", self)
 
-        #connection of button slot
-        self.pushButton.released.connect(lambda: self.camera.save("test",self.camera.acq("RGB")))
-
+        #slots connection
+        self.pushButton.released.connect(self.button1)
+        self.spinBox.valueChanged.connect(self.changeCamera)
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
@@ -35,6 +35,16 @@ class Interface(QtWidgets.QMainWindow):
 
     def button1(self):
         self.camera.save("test",self.camera.acq("BGR"))
+
+    def changeCamera(self, index):
+        #method1
+        #newCam = cv2.VideoCapture(index,cv2.CAP_ANY)
+        #self.camera.webcam = newCam
+
+        #method2
+        newCam = Camera(index)
+        self.camera = newCam
+
 
 
 if __name__ == "__main__":

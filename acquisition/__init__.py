@@ -1,7 +1,7 @@
 import cv2
 import os
 
-class camera():
+class Camera():
     """
     class in charge of interaction with th webcam
     """
@@ -12,7 +12,7 @@ class camera():
     def __init__(self,cameraIndex=0):
         """constructor"""
         #CAP_ANY correspond à la méthode de capture de l'image (backend)
-        webcam = cv2.VideoCapture(cameraIndex,cv2.CAP_DSHOW)
+        self.webcam = cv2.VideoCapture(cameraIndex,cv2.CAP_ANY)
 
 
     def acq(self,space, height=480,width=640):
