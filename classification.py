@@ -1,10 +1,19 @@
 import cv2 
 import numpy as np
-from sklearn.cluster import MeanShift
+from sklearn.cluster import MeanShift,KMeans
 import matplotlib.pyplot as plt
 
+def findcluster(features_vector,cluster_centers):
+    data=cluster_centers-features_vector
+    return(min(np.linalg.norm(data,ord=1,axis=2)))
 
-     
+def createCluster(base):
+     """"Renvoie les clusters de la base
+     base n vecteur de m features """
+     nbcluster=10
+     kmeans=KMeans(nbcluster).fit(base)
+     return(kmeans.cluster_centers_)
+        
 
 def segmenatationMain(image):
     """"Fonction qui binarise l'image de la main
