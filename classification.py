@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 
 def findcluster(features_vector,cluster_centers):
     data=cluster_centers-features_vector
-    return(min(np.linalg.norm(data,ord=1,axis=2)))
+    distances=np.linalg.norm(data,ord=1,axis=2)
+    indice=distances.index(min(distances))
+    return(indice)
 
 def createCluster(base):
      """"Renvoie les clusters de la base
