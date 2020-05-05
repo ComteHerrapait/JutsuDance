@@ -9,14 +9,17 @@ from acquisition import *
 
 class Interface(QtWidgets.QMainWindow):
     camera = Camera()
+    CameraIndex = 0
 
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("interface.ui", self)
 
         #slots connection
-        self.pushButton.released.connect(self.button1)
-        self.spinBox.valueChanged.connect(self.changeCamera)
+        self.buttonSave.released.connect(self.savePreview)
+        self.buttonPlus.released.connect(self.plus)
+        self.buttonMinus.released.connect(self.minus)
+
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
@@ -33,19 +36,18 @@ class Interface(QtWidgets.QMainWindow):
     def __del__(self):
         cv2.destroyAllWindows()
 
-    def button1(self):
-        self.camera.save("test",self.camera.acq("BGR"))
+    def plus(self):
+        if self.camera.changeInput(self.CameraIndex + 1):
+            self.CameraIndex +=1
+            self.labelCamera.setText(str(self.CameraIndex))
 
-    def changeCamera(self, index):
-        #method1
-        #newCam = cv2.VideoCapture(index,cv2.CAP_ANY)
-        #self.camera.webcam = newCam
+    def minus(self):
+        if self.camera.changeInput(self.CameraIndex - 1):
+            self.CameraIndex -=1
+            self.labelCamera.setText(str(self.CameraIndex))
 
-        #method2
-        newCam = Camera(index)
-        self.camera = newCam
-
-
+    def savePreview(self):
+        self.camera.save("test",self.camera.acq("RGB"))
 
 if __name__ == "__main__":
     """Fonction MAIN """
@@ -54,7 +56,6 @@ if __name__ == "__main__":
     window = Interface()
     window.show()
     sys.exit(app.exec_())
-
 
 
 
