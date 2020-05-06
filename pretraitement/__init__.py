@@ -8,13 +8,7 @@ Created on Tue May  5 10:10:18 2020
 import numpy as np 
 import cv2
 
-def pretraitement():
-    # read video 
-    cap = cv2.VideoCapture(0) 
-    # retrieve the very first  
-    # frame from the video
-    _, frame = cap.read()
-    
+def pretraitement(frame):    
        
     # set the region for the 
     # tracking window p, q, r, s 
@@ -46,9 +40,8 @@ def pretraitement():
     i = 0
     while(i<50):
         i = i+1
-        _, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-        frame = cv2.resize(frame, (1280, 720), fx = 0, fy = 0, interpolation = cv2.INTER_CUBIC) 
+        #frame = cv2.flip(frame, 1)
+        #frame = cv2.resize(frame, (1280, 720), fx = 0, fy = 0, interpolation = cv2.INTER_CUBIC) 
         
         # convert BGR to HSV format 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -64,12 +57,12 @@ def pretraitement():
         #img2 = cv2.rectangle(frame, (x, y), (x + w*2, y + h*2), 255, 2) 
         pts = cv2.boxPoints(ret)
         pts = np.int0(pts)
-        img2 = cv2.polylines(frame,[pts],True, 255,2)
+        #img2 = cv2.polylines(frame,[pts],True, 255,2)
           
         # show results 
         #cv2.imshow('tracker', img2)
        
-    cv2.imwrite(filename='saved_img-final_MS.jpg', img=img2)
+    #cv2.imwrite(filename='saved_img-final_MS.jpg', img=img2)
     
     x = min(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
     y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
@@ -77,9 +70,9 @@ def pretraitement():
     h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
     img3 = frame[y:h,x:w]
     cv2.imwrite(filename='Image_main.jpg', img=img3)
-       
-    # release cap object 
-    cap.release() 
       
     # destroy all opened windows 
-    cv2.destroyAllWindows() 
+    cv2.destroyAllWindows()
+
+frame = cv2.imread("./image_test.jpg")
+pretraitement(frame)

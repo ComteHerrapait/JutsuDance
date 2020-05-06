@@ -66,6 +66,9 @@ while(True):
    
     frame = cv2.resize(frame, (1280, 720), fx = 0, fy = 0, interpolation = cv2.INTER_CUBIC) 
     
+    cv2.imwrite(filename='image_test.jpg', img=frame)
+    
+    
     # convert BGR to HSV format 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     cv2.imshow('hsv', hsv)
