@@ -10,7 +10,7 @@ def findcluster(features_vector,cluster_centers):
     return(indice)
 
 def createCluster(base):
-     """"Renvoie les clusters de la base
+     """Renvoie les clusters de la base
      base n vecteur de m features """
      nbcluster=10
      kmeans=KMeans(nbcluster).fit(base)
@@ -18,7 +18,7 @@ def createCluster(base):
         
 
 def segmenatationMain(image):
-    """"Fonction qui binarise l'image de la main
+    """Fonction qui binarise l'image de la main
     input : image centrée sur la main 
     output : image binaire d la main """
     taille=(64,64)
