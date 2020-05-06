@@ -5,7 +5,7 @@ from PyQt5 import uic
 import sys
 
 from acquisition import *
-
+from classification import *
 
 class Interface(QtWidgets.QMainWindow):
     camera = Camera()
