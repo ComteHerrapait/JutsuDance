@@ -13,7 +13,7 @@ def pretraitement(frame):
     # set the region for the 
     # tracking window p, q, r, s 
     # put values according to yourself 
-    p, q, r, s = 150, 150, 400, 120
+    p, q, r, s = 150, 150, 300, 120
     track_window = (r, p, s, q) 
        
           
@@ -21,7 +21,8 @@ def pretraitement(frame):
     #r_o_i = frame[p:p + q, r:r + s] 
       
     # converting BGR to HSV format 
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) 
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    cv2.imwrite(filename='image_hsv.jpg', img=hsv)
        
     # apply mask on the HSV frame 
     mask = cv2.inRange(hsv, np.array((0., 60.,32.)), np.array((180.,255.,255.))) 
