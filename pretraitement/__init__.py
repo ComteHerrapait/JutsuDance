@@ -73,6 +73,3 @@ def pretraitement(frame):
       
     # destroy all opened windows 
     cv2.destroyAllWindows()
-
-frame = cv2.imread("./image_test.jpg")
-pretraitement(frame)
