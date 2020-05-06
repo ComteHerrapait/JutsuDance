@@ -6,6 +6,7 @@ import sys
 
 from acquisition import *
 from classification import *
+from pretraitement import *
 
 class Interface(QtWidgets.QMainWindow):
     camera = Camera()
