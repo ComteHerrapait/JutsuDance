@@ -13,7 +13,7 @@ def pretraitement(frame):
     # set the region for the 
     # tracking window p, q, r, s 
     # put values according to yourself 
-    p, q, r, s = 150, 150, 300, 120
+    p, q, r, s = 150, 150, 100, 80
     track_window = (r, p, s, q) 
        
           
@@ -39,7 +39,7 @@ def pretraitement(frame):
     termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 15, 2 ) 
     
     i = 0
-    while(i<50):
+    while(i<100):
         i = i+1
         #frame = cv2.flip(frame, 1)
         #frame = cv2.resize(frame, (1280, 720), fx = 0, fy = 0, interpolation = cv2.INTER_CUBIC) 
@@ -69,8 +69,8 @@ def pretraitement(frame):
     y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
     w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
     h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
-    img3 = frame[y:h,x:w]
-    cv2.imwrite(filename='Image_main.jpg', img=img3)
+    main = frame[y:h,x:w]
+    return(main)
       
     # destroy all opened windows 
     cv2.destroyAllWindows()
