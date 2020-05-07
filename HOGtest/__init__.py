@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt 
 
+
 def hog(img,canal=1,SizeWind=16) :
     """
 
