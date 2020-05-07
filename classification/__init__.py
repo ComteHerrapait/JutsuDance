@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.cluster import MeanShift,KMeans
 import matplotlib.pyplot as plt
 import time
-from HOGtest import *
+
 
 def findcluster(features_vector,cluster_centers):
     data=cluster_centers-features_vector
@@ -14,7 +14,7 @@ def findcluster(features_vector,cluster_centers):
 def createCluster(base):
      """Renvoie les clusters de la base
      base n vecteur de m features """
-     nbcluster=10
+     nbcluster=2
      kmeans=KMeans(nbcluster).fit(base)
      return(kmeans.cluster_centers_)
         

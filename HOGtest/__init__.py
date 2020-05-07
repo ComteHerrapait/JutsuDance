@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt 
-
+from classification import createCluster
 
 def hog(img,canal=1,SizeWind=16) :
     """
@@ -44,3 +44,7 @@ h3=hog(img3,1)
 h4=hog(img4,1)
 h5=hog(img5,1)
 h6=hog(img6,1)
+data=np.concatenate((h1,h2,h3,h4,h5,h6),axis=1)
+cluster=createCluster(data)
+print(cluster)
+
