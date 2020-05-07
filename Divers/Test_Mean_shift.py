@@ -7,7 +7,7 @@ Created on Tue Apr  7 17:03:52 2020
 
 import numpy as np 
 import cv2
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
   
 # read video 
@@ -17,25 +17,11 @@ cap = cv2.VideoCapture(0)
 #fond = cv2.imread("./fond.jpg")
 _, frame = cap.read()
 #frame = cv2.subtract(fond,frame)
-main = cv2.imread("./Image_main.jpg")
-main_hsv = cv2.cvtColor(main, cv2.COLOR_BGR2HSV)
-mask = cv2.inRange(main_hsv, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
-roi1 = cv2.calcHist([main_hsv], [0], mask, [180], [0, 180])
-roi2 = cv2.calcHist([main_hsv], [1], mask, [180], [0, 180])
-roi3 = cv2.calcHist([main_hsv], [2], mask, [180], [0, 180])
-cv2.imshow('main', main_hsv)
-plt.hist(roi1)
-plt.show()
-plt.hist(roi2)
-plt.show()
-plt.hist(roi3)
-plt.show()
 
-   
 # set the region for the 
 # tracking window p, q, r, s 
 # put values according to yourself 
-p, q, r, s = 150, 150, 400, 120
+p, q, r, s = 150, 150, 200, 80
 track_window = (r, p, s, q) 
    
       
@@ -76,15 +62,15 @@ while(True):
     bp = cv2.calcBackProject([hsv], [1], roi, [0, 180], 1) 
    
     # applying meanshift to get the new region 
-    #_, track_window = cv2.meanShift(bp, track_window, termination)
-    ret, track_window = cv2.CamShift(bp, track_window, termination) 
+    _, track_window = cv2.meanShift(bp, track_window, termination)
+    #ret, track_window = cv2.CamShift(bp, track_window, termination) 
    
     # Draw track window on the frame 
-    #x, y, w, h = track_window 
-    #img2 = cv2.rectangle(frame, (x, y), (x + w*2, y + h*2), 255, 2) 
-    pts = cv2.boxPoints(ret)
-    pts = np.int0(pts)
-    img2 = cv2.polylines(frame,[pts],True, 255,2)
+    x, y, w, h = track_window 
+    img2 = cv2.rectangle(frame, (x, y), (x + w*2, y + h*2), 255, 2) 
+    #pts = cv2.boxPoints(ret)
+    #pts = np.int0(pts)
+    #img2 = cv2.polylines(frame,[pts],True, 255,2)
       
     # show results 
     cv2.imshow('tracker', img2)
@@ -94,11 +80,11 @@ while(True):
         img_meanshift = cv2.imwrite(filename='saved_img-final_MS.jpg', img=img2)
         break
     if k == ord('m'):
-        x = min(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
-        y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
-        w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
-        h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
-        img3 = frame[y:h,x:w]
+        #x = min(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
+        #y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
+        #w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
+        #h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
+        img3 = frame[y:y+h*2,x:x+w*2]
         img_main = cv2.imwrite(filename='Image_main.jpg', img=img3)
         break
        

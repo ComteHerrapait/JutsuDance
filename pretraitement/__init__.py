@@ -13,12 +13,12 @@ def pretraitement(frame):
     # set the region for the 
     # tracking window p, q, r, s 
     # put values according to yourself 
-    p, q, r, s = 150, 150, 100, 80
+    p, q, r, s = 80, 100, 70, 70
     track_window = (r, p, s, q) 
        
           
     # create the region of interest 
-    #r_o_i = frame[p:p + q, r:r + s] 
+    r_o_i = frame[p:p + q, r:r + s] 
       
     # converting BGR to HSV format 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -50,14 +50,14 @@ def pretraitement(frame):
         bp = cv2.calcBackProject([hsv], [1], roi, [0, 180], 1) 
            
         # applying meanshift to get the new region 
-        #_, track_window = cv2.meanShift(bp, track_window, termination)
-        ret, track_window = cv2.CamShift(bp, track_window, termination) 
+        _, track_window = cv2.meanShift(bp, track_window, termination)
+        #ret, track_window = cv2.CamShift(bp, track_window, termination) 
            
         # Draw track window on the frame 
-        #x, y, w, h = track_window 
+        x, y, w, h = track_window 
         #img2 = cv2.rectangle(frame, (x, y), (x + w*2, y + h*2), 255, 2) 
-        pts = cv2.boxPoints(ret)
-        pts = np.int0(pts)
+        #pts = cv2.boxPoints(ret)
+        #pts = np.int0(pts)
         #img2 = cv2.polylines(frame,[pts],True, 255,2)
           
         # show results 
@@ -65,11 +65,11 @@ def pretraitement(frame):
        
     #cv2.imwrite(filename='saved_img-final_MS.jpg', img=img2)
     
-    x = min(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
-    y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
-    w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
-    h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
-    main = frame[y:h,x:w]
+    #x = min(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
+    #y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
+    #w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
+    #h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
+    main = frame[y:y+q,x-10:x+s+25]
     return(main)
       
     # destroy all opened windows 
