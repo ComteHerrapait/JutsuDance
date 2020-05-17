@@ -23,7 +23,7 @@ def segmenatationMain(image):
     input : image centrée sur la main 
     output : image binaire d la main """
     taille=(64,64)
-    if np.size(image)!=taille:
+    if np.shape(image)!=taille:
         image=cv2.resize(image,taille)
     imLab=cv2.cvtColor(image,cv2.COLOR_BGR2LAB)
     plana=np.reshape(imLab[:,:,1],taille[1]*taille[0])
@@ -34,13 +34,14 @@ def segmenatationMain(image):
     ms.fit(data)
     lblsAll=ms.labels_
     k=ms.predict(np.reshape([150,170],(1,-1)))
-    image_seg=np.where(lblsAll==k,256,0)      
+    image_seg=np.where(lblsAll==k,1,0)      
     image_seg=np.reshape(image_seg,taille)
     return(image_seg)
 
-def surface(im_seg):
+def surface(image):
     """Calcul de la surface de la main"""
-    return(np.sum(np.sum(im_seg))/256)
+    im_seg=segmenatationMain(image)
+    return(np.sum(np.sum(im_seg)))
     
     
     
