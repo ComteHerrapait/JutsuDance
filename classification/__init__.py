@@ -40,7 +40,11 @@ def segmenatationMain(image):
     print(t2-t1)
     return(image_seg)
 
-image=cv2.imread('9.jpg')
+#chemin relatif
+from pathlib import Path
+chemin = Path(__file__).parents[1]
+
+image=cv2.imread(str(chemin)+"\Base d'images test\9.jpg")
 # cv2.namedWindow('Input')
 # cv2.resizeWindow('Input',512,512)
 # image=cv2.resize(image,(512,512))
