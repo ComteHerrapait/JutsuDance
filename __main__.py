@@ -57,7 +57,7 @@ class Interface(QtWidgets.QMainWindow):
             self.labelCamera.setText(str(self.CameraIndex))
 
     def savePreview(self):
-        self.camera.save("test",self.camera.acq("RGB"))
+        self.camera.save("capture",self.camera.acq("RGB"))
 
 if __name__ == "__main__":
     """Fonction MAIN """
