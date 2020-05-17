@@ -13,7 +13,7 @@ def pretraitement(frame):
     # set the region for the 
     # tracking window p, q, r, s 
     # put values according to yourself 
-    p, q, r, s = 100, 100, 70, 70
+    p, q, r, s = 60, 10, 60, 10
     track_window = (r, p, s, q) 
        
           
@@ -36,7 +36,7 @@ def pretraitement(frame):
        
     # termination criteria, either 15  
     # iteration or by at least 2 pt 
-    termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 15, 2 ) 
+    termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 ) 
     
     #frame = cv2.flip(frame, 1)
     #frame = cv2.resize(frame, (1280, 720), fx = 0, fy = 0, interpolation = cv2.INTER_CUBIC) 
@@ -66,7 +66,7 @@ def pretraitement(frame):
     #y = min(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
     #w = max(pts[0][0],pts[1][0],pts[2][0],pts[3][0])
     #h = max(pts[0][1],pts[1][1],pts[2][1],pts[3][1])
-    main = frame[y:y+q,x-10:x+s+25]
+    main = frame[y:y+100,x:x+100]
     return(main)
       
     # destroy all opened windows 
