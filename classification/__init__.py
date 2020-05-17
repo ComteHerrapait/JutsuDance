@@ -7,8 +7,8 @@ import time
 
 def findcluster(features_vector,cluster_centers):
     data=cluster_centers-features_vector
-    distances=np.linalg.norm(data,ord=1,axis=2)
-    indice=distances.index(min(distances))
+    distances=np.linalg.norm(data,ord=1,axis=1)
+    indice=np.argmin(distances)
     return(indice)
 
 def createCluster(base):
@@ -40,7 +40,7 @@ def segmenatationMain(image):
     print(t2-t1)
     return(image_seg)
 
-image=cv2.imread('9.jpg')
+#image=cv2.imread('9.jpg')
 # cv2.namedWindow('Input')
 # cv2.resizeWindow('Input',512,512)
 # image=cv2.resize(image,(512,512))
@@ -50,7 +50,7 @@ image=cv2.imread('9.jpg')
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 
-imseg=segmenatationMain(image)
-plt.figure();
-plt.imshow(imseg)
-plt.show()
+# imseg=segmenatationMain(image)
+# plt.figure();
+# plt.imshow(imseg)
+# plt.show()

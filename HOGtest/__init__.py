@@ -31,20 +31,3 @@ def hog(img,canal=1,SizeWind=16) :
     return hog.compute(img[:,:,canal])
 
 
-img1=cv2.cvtColor(cv2.imread('1.jpg'), cv2.COLOR_BGR2HSV)
-img2=cv2.cvtColor(cv2.imread('2.jpg'), cv2.COLOR_BGR2HSV)
-img3=cv2.cvtColor(cv2.imread('3.jpg'), cv2.COLOR_BGR2HSV)
-img4=cv2.cvtColor(cv2.imread('4.jpg'), cv2.COLOR_BGR2HSV)
-img5=cv2.cvtColor(cv2.imread('5.jpg'), cv2.COLOR_BGR2HSV)
-img6=cv2.cvtColor(cv2.imread('6.jpg'), cv2.COLOR_BGR2HSV)
-
-h1=hog(img1,1)
-h2=hog(img2,1)
-h3=hog(img3,1)
-h4=hog(img4,1)
-h5=hog(img5,1)
-h6=hog(img6,1)
-data=np.concatenate((h1,h2,h3,h4,h5,h6),axis=1)
-cluster=createCluster(data)
-print(cluster)
-
