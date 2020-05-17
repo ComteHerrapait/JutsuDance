@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from sklearn.cluster import MeanShift,KMeans
 import matplotlib.pyplot as plt
-import time
 
 
 def findcluster(features_vector,cluster_centers):
@@ -23,7 +22,6 @@ def segmenatationMain(image):
     """Fonction qui binarise l'image de la main
     input : image centrée sur la main 
     output : image binaire d la main """
-    t1=time.time()
     taille=(64,64)
     if np.size(image)!=taille:
         image=cv2.resize(image,taille)
@@ -34,23 +32,22 @@ def segmenatationMain(image):
     bdw=5 #possible nécessité de set au début du programme estimate_bandwith
     ms=MeanShift(bdw,bin_seeding=True,n_jobs=-1,min_bin_freq=20)
     ms.fit(data)
-    lblsAll=ms.labels_ 
-    image_seg=np.reshape(lblsAll,taille)
-    t2=time.time()
-    print(t2-t1)
+    lblsAll=ms.labels_
+    k=ms.predict(np.reshape([150,170],(1,-1)))
+    image_seg=np.where(lblsAll==k,256,0)      
+    image_seg=np.reshape(image_seg,taille)
     return(image_seg)
 
-#image=cv2.imread('9.jpg')
-# cv2.namedWindow('Input')
-# cv2.resizeWindow('Input',512,512)
-# image=cv2.resize(image,(512,512))
-# cv2.imshow("Input",image)
-# imseg=segmenatationMain(image)
-# cv2.imshow('Input',imseg)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+def surface(im_seg):
+    """Calcul de la surface de la main"""
+    return(np.sum(np.sum(im_seg))/256)
+    
+    
+    
 
+# image=cv2.imread('1.jpg')
 # imseg=segmenatationMain(image)
+# print(surface(imseg))
 # plt.figure();
 # plt.imshow(imseg)
 # plt.show()
