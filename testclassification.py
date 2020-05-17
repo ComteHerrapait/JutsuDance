@@ -6,9 +6,8 @@ Created on Sun May 17 14:16:11 2020
 """
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt 
 import classification as cl
-import HOGtest as HOG
+
 
 img1=cv2.cvtColor(cv2.imread('1.jpg'), cv2.COLOR_BGR2LAB)
 img2=cv2.cvtColor(cv2.imread('2.jpg'), cv2.COLOR_BGR2LAB)
@@ -18,20 +17,12 @@ img5=cv2.cvtColor(cv2.imread('5.jpg'), cv2.COLOR_BGR2LAB)
 img6=cv2.cvtColor(cv2.imread('6.jpg'), cv2.COLOR_BGR2LAB)
 
 
-img1=cl.segmenatationMain(img1)
-img2=cl.segmenatationMain(img2)
-img3=cl.segmenatationMain(img3)
-img4=cl.segmenatationMain(img4)
-img5=cl.segmenatationMain(img5)
-img6=cl.segmenatationMain(img6)
-
-h1=HOG.hog_BW(img1.astype(np.uint8))    
-h2=HOG.hog_BW(img2.astype(np.uint8))
-h3=HOG.hog_BW(img3.astype(np.uint8))
-h4=HOG.hog_BW(img4.astype(np.uint8))
-h5=HOG.hog_BW(img5.astype(np.uint8))
-h6=HOG.hog_BW(img6.astype(np.uint8))
-
+h1=cl.createFeatureVector(img1)    
+h2=cl.createFeatureVector(img2)
+h3=cl.createFeatureVector(img3)
+h4=cl.createFeatureVector(img4)
+h5=cl.createFeatureVector(img5)
+h6=cl.createFeatureVector(img6)
 
 
 
