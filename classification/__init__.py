@@ -37,7 +37,7 @@ def segmenatationMain(image):
     lblsAll=ms.labels_ 
     image_seg=np.reshape(lblsAll,taille)
     t2=time.time()
-    print(t2-t1)
+    #print(t2-t1)
     return(image_seg)
 
 #chemin relatif

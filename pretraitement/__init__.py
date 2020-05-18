@@ -54,8 +54,8 @@ def pretraitement(frame):
     bp_YCbCr = cv2.calcBackProject([YCbCr], [1], roi_YCbCr, [0, 180], 1) 
        
     # applying meanshift to get the new region 
-    #_, track_window = cv2.meanShift(bp_hsv, track_window, termination)
-    _, track_window = cv2.meanShift(bp_YCbCr, track_window, termination)
+    _, track_window = cv2.meanShift(bp_hsv, track_window, termination)
+    #_, track_window = cv2.meanShift(bp_YCbCr, track_window, termination)
        
     # Draw track window on the frame 
     x, y, w, h = track_window 

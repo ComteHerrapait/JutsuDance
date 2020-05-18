@@ -29,6 +29,7 @@ class Interface(QtWidgets.QMainWindow):
         self.timer.timeout.connect(self.update)
         self.timer.start(30)
         
+        #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
         self.webcam.set(3,640) # 3 : format de l'image en largeur
 
