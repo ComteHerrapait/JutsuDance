@@ -14,6 +14,7 @@ class Interface(QtWidgets.QMainWindow):
     mainX = 60
     mainY = 60
     preview = webcam.read()[1]
+    # centers = createCluster(createFeatureVector(preview))
     
     def __init__(self):
         """constrcteur"""
@@ -60,8 +61,7 @@ class Interface(QtWidgets.QMainWindow):
                 
                 #classification (Partie Jean-Baptiste)
             # featureVector = createFeatureVector(frameCrop)
-            # centers =       createCluster(featureVector)
-            # indice  =       findcluster(featureVector, centers)
+            # indice  =       findcluster(featureVector, self.centers)
             
             
                 #Affiche sur l'interface
