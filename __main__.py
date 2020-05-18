@@ -17,7 +17,8 @@ class Interface(QtWidgets.QMainWindow):
     centers = initcluster()
     
     def __init__(self):
-        """constrcteur"""
+        """constructeur"""
+        print("valeurs initialisées")
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("interface.ui", self)
         
@@ -35,6 +36,7 @@ class Interface(QtWidgets.QMainWindow):
         #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
         self.webcam.set(3,640) # 3 : format de l'image en largeur
+        print("initialisation terminée")
 
 
     def display(self,image1,image2, image3):
@@ -112,7 +114,8 @@ class Interface(QtWidgets.QMainWindow):
         
 if __name__ == "__main__":
     """Fonction MAIN """
-
+    
+    print("début de l'initialisation")
     app = QtWidgets.QApplication(sys.argv)
     window = Interface()
     window.show()
