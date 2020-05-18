@@ -60,7 +60,7 @@ def pretraitement(frame, p, q, r, s):
     x, y, w, h = track_window 
       
     # Extract hand 
-    main = frame[y:y+100,x:x+100]
+    main = frame[y:y+w,x:x+h]
     return main, y, x
       
     # destroy all opened windows 

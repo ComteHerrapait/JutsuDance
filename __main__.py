@@ -63,8 +63,8 @@ class Interface(QtWidgets.QMainWindow):
             
                 #redimensionne l'image autour de la main (Partie Arthur)
             frameTemp, self.mainY, self.mainX = pretraitement(frame, 
-                                                              self.mainY, 10, 
-                                                              self.mainX, 10)
+                                                              self.mainY, 200, 
+                                                              self.mainX, 200)
             frameCrop =    frameTemp.copy()#necessaire pour eviter des problèmes de conversion
                 
                 #classification (Partie Jean-Baptiste)
