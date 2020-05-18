@@ -56,10 +56,11 @@ class Interface(QtWidgets.QMainWindow):
             imageCrop =    QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
                 
                 #classification (Partie Jean-Baptiste)
-            featureVector = createFeatureVector(frameCrop)
-            centers =       createCluster(featureVector)
-            indice  =       findcluster(featureVector, centers)
-                
+            #featureVector = createFeatureVector(frameCrop)
+            #centers =       createCluster(featureVector)
+            #indice  =       findcluster(featureVector, centers)
+            imageClass = imageCrop
+            
                 #Affiche sur l'interface
             self.display(image, imageCrop, imageClass)
             
