@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5 import uic
 import sys
 
-from classification import createFeatureVector, createCluster, findcluster
+from classification import createFeatureVector, createCluster, findcluster, initcluster
 from pretraitement import pretraitement
 from hog import *
 
@@ -14,7 +14,7 @@ class Interface(QtWidgets.QMainWindow):
     mainX = 60
     mainY = 60
     preview = webcam.read()[1]
-    # centers = createCluster(createFeatureVector(preview))
+    centers = initcluster()
     
     def __init__(self):
         """constrcteur"""
@@ -39,9 +39,15 @@ class Interface(QtWidgets.QMainWindow):
 
     def display(self,image1,image2, image3):
         """affiche une image dans le label au centre de l'interface"""   
-        self.label.setPixmap(QtGui.QPixmap.fromImage(image1))
-        self.label2.setPixmap(QtGui.QPixmap.fromImage(image2))
-        self.label3.setPixmap(QtGui.QPixmap.fromImage(image3))
+        self.label.setPixmap(
+            QtGui.QPixmap.fromImage(image1).scaled(640,400,QtCore.Qt.KeepAspectRatio)
+            )
+        self.label2.setPixmap(
+            QtGui.QPixmap.fromImage(image2).scaled(100,100,QtCore.Qt.KeepAspectRatio)
+            )
+        self.label3.setPixmap(
+            QtGui.QPixmap.fromImage(image3).scaled(100,100,QtCore.Qt.KeepAspectRatio)
+            )
 
     def update(self):
         """ mets à jour l'affichage sur l'interface"""      
@@ -60,14 +66,15 @@ class Interface(QtWidgets.QMainWindow):
             frameCrop =    frameTemp.copy()#necessaire pour eviter des problèmes de conversion
                 
                 #classification (Partie Jean-Baptiste)
-            # featureVector = createFeatureVector(frameCrop)
-            # indice  =       findcluster(featureVector, self.centers)
-            
+            featureVector = createFeatureVector(frameCrop)
+            indice  =       findcluster(featureVector.T, self.centers)
+            i = (indice + 1) * 3 - 2
+            frameClass =    cv2.cvtColor(cv2.imread('base images crop/'+str(i)+'.jpg'), cv2.COLOR_BGR2RGB)
             
                 #Affiche sur l'interface
             image =      QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
             imageCrop =  QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
-            imageClass = imageCrop
+            imageClass = QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)
             self.display(image, imageCrop, imageClass)
             
     def changeInput(self,cameraIndex):
