@@ -13,6 +13,7 @@ class Interface(QtWidgets.QMainWindow):
     cameraIndex = 0
     mainX = 60
     mainY = 60
+    preview = webcam.read()[1]
     
     def __init__(self):
         """constrcteur"""
@@ -22,9 +23,8 @@ class Interface(QtWidgets.QMainWindow):
         if not self.webcam.isOpened(): raise IOError("No camera attached")
         
         #slots connection
-        #self.buttonSave.released.connect(self.save)
-        #self.buttonPlus.released.connect(self.plus)
-        #self.buttonMinus.released.connect(self.minus)
+        self.buttonCamera.released.connect(self.cycleinput)
+        self.buttonSave.released.connect(self.save)
 
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
@@ -49,7 +49,8 @@ class Interface(QtWidgets.QMainWindow):
         
             #vérifie que l'image est bien capturée
         if not frameBGR is None and len(frameBGR) != 0: 
-            frame =        cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
+            frame = cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
+            self.preview = frame.copy()
             
                 #redimensionne l'image autour de la main (Partie Arthur)
             frameTemp, self.mainY, self.mainX = pretraitement(frame, 
@@ -81,21 +82,22 @@ class Interface(QtWidgets.QMainWindow):
             self.webcam = newCam
             return True
         
-    def plus(self):
-        """camera suivante"""
-        if self.changeInput(self.CameraIndex + 1):
-            self.CameraIndex +=1
-            self.labelCamera.setText(str(self.CameraIndex))
+    def cycleinput(self):
+        """cycle les cameras"""
+            #essaie d'utiliser la camera suivante
+        if self.changeInput(self.cameraIndex + 1):
+            self.cameraIndex += 1
+            
+            #sinon, repasse à la première
+        elif self.changeInput(0):
+            self.cameraIndex = 0
+            
+        print("utilise maintenant la camera : ", self.cameraIndex)
 
-    def minus(self):
-        """camera précédente"""
-        if self.changeInput(self.CameraIndex - 1):
-            self.CameraIndex -=1
-            self.labelCamera.setText(str(self.CameraIndex))
-
-    def save(self, frame):
-        imgBGR=cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+    def save(self):
+        imgBGR=cv2.cvtColor(self.preview, cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename=("capture.jpg"), img=imgBGR)
+        print("image sauvegardée dans capture.jpg")
 
     def closeEvent(self,event):
         self.webcam.release()
