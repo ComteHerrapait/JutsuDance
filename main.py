@@ -12,11 +12,12 @@ from pretraitement import pretraitement
 from sklearn.metrics import *
 
 for k in range(1,22):
+    p, q, r, s = 60, 10, 60, 10
     frame = cv2.imread("./Base d'images test/{}.jpg".format(k))
     frame = cv2.resize(frame,(400,225))
-    main = pretraitement(frame)
+    main = pretraitement(frame, p, q, r, s)
     path = './Resultats'
-    cv2.imwrite(os.path.join(path , 'Image_main{}.jpg'.format(k)), main)
+    cv2.imwrite(os.path.join(path , 'Image_main{}.jpg'.format(k)), main[0])
     
 fond = cv2.imread("./Base d'images test/1.jpg")
 image = cv2.imread("./Base d'images test/4.jpg")
