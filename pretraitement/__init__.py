@@ -23,8 +23,8 @@ def pretraitement(frame):
     # converting BGR to HSV format 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     YCbCr = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
-    cv2.imwrite(filename='image_YCbCr.jpg', img=YCbCr)
-    cv2.imwrite(filename='image_hsv.jpg', img=hsv)
+    #cv2.imwrite(filename='image_YCbCr.jpg', img=YCbCr)
+    #cv2.imwrite(filename='image_hsv.jpg', img=hsv)
        
     # apply mask on the HSV frame 
     mask_hsv = cv2.inRange(hsv, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
