@@ -1,19 +1,19 @@
 import cv2 
 import numpy as np
 from sklearn.cluster import MeanShift,KMeans
-
+import pywt
 
 
 def findcluster(features_vector,cluster_centers):
     data=cluster_centers-features_vector
-    distances=np.linalg.norm(data,ord=1,axis=1)
+    distances=np.linalg.norm(data,ord=None,axis=1)
     indice=np.argmin(distances)
     return(indice)
 
 def createCluster(base):
      """Renvoie les clusters de la base
      base n vecteur de m features """
-     nbcluster=2
+     nbcluster=7
      kmeans=KMeans(nbcluster).fit(base)
      return(kmeans.cluster_centers_)
         
@@ -63,9 +63,65 @@ def hog(img,SizeWind=16) :
 def createFeatureVector(image):
     """Return feature vector of image"""
     imseg=segmenatationMain(image)
-    h=hog(imseg.astype(np.uint8))
-    #s=surface(imseg)
+    h=100*hog(imseg.astype(np.uint8))
+    s=surface(imseg)
+    cw=wavelet(image)
     #add more feature if needed
-    #return(np.concatenate((h,[[s]]),axis=0))
+    return(np.concatenate((h[100:-1],[[s]],cw),axis=0))
     return(h)
     
+def wavelet(image):
+    taille=(64,64)
+    if np.shape(image)!=taille:
+        image=cv2.resize(image,taille)
+    imLab=cv2.cvtColor(image,cv2.COLOR_BGR2LAB)
+    #print(np.shape(imLab))
+    coeffs=pywt.downcoef('d', np.reshape(imLab[:,:,0],taille[0]*taille[1]),'Haar')
+    return(np.atleast_2d(coeffs).T)
+    
+
+def initcluster():
+    img1=cv2.cvtColor(cv2.imread('1.jpg'), cv2.COLOR_BGR2LAB)
+    img2=cv2.cvtColor(cv2.imread('2.jpg'), cv2.COLOR_BGR2LAB)
+    img3=cv2.cvtColor(cv2.imread('3.jpg'), cv2.COLOR_BGR2LAB)
+    img4=cv2.cvtColor(cv2.imread('4.jpg'), cv2.COLOR_BGR2LAB)
+    img5=cv2.cvtColor(cv2.imread('5.jpg'), cv2.COLOR_BGR2LAB)
+    img6=cv2.cvtColor(cv2.imread('6.jpg'), cv2.COLOR_BGR2LAB)
+    img7=cv2.cvtColor(cv2.imread('7.jpg'), cv2.COLOR_BGR2LAB)
+    img8=cv2.cvtColor(cv2.imread('8.jpg'), cv2.COLOR_BGR2LAB)
+    img9=cv2.cvtColor(cv2.imread('9.jpg'), cv2.COLOR_BGR2LAB)
+    img10=cv2.cvtColor(cv2.imread('10.jpg'), cv2.COLOR_BGR2LAB)
+    img11=cv2.cvtColor(cv2.imread('11.jpg'), cv2.COLOR_BGR2LAB)
+    img12=cv2.cvtColor(cv2.imread('12.jpg'), cv2.COLOR_BGR2LAB)
+    img13=cv2.cvtColor(cv2.imread('13.jpg'), cv2.COLOR_BGR2LAB)
+    img14=cv2.cvtColor(cv2.imread('14.jpg'), cv2.COLOR_BGR2LAB)
+    img15=cv2.cvtColor(cv2.imread('15.jpg'), cv2.COLOR_BGR2LAB)
+    img16=cv2.cvtColor(cv2.imread('16.jpg'), cv2.COLOR_BGR2LAB)
+    img17=cv2.cvtColor(cv2.imread('17.jpg'), cv2.COLOR_BGR2LAB)
+    img18=cv2.cvtColor(cv2.imread('18.jpg'), cv2.COLOR_BGR2LAB)
+    img19=cv2.cvtColor(cv2.imread('19.jpg'), cv2.COLOR_BGR2LAB)
+    img20=cv2.cvtColor(cv2.imread('20.jpg'), cv2.COLOR_BGR2LAB)
+    img21=cv2.cvtColor(cv2.imread('21.jpg'), cv2.COLOR_BGR2LAB)
+    h1=createFeatureVector(img1)    
+    h2=createFeatureVector(img2)
+    h3=createFeatureVector(img3)
+    h4=createFeatureVector(img4)
+    h5=createFeatureVector(img5)
+    h6=createFeatureVector(img6)
+    h7=createFeatureVector(img7)    
+    h8=createFeatureVector(img8)
+    h9=createFeatureVector(img9)
+    h10=createFeatureVector(img10)
+    h11=createFeatureVector(img11)
+    h12=createFeatureVector(img12)
+    h13=createFeatureVector(img13)    
+    h14=createFeatureVector(img14)
+    h15=createFeatureVector(img15)
+    h16=createFeatureVector(img16)
+    h17=createFeatureVector(img17)
+    h18=createFeatureVector(img18)
+    h19=createFeatureVector(img19)    
+    h20=createFeatureVector(img20)
+    h21=createFeatureVector(img21)
+    data=np.concatenate((h1.T, h4.T,h7.T,h10.T,h13.T,h16.T,h19.T,h2.T, h5.T,h8.T,h11.T,h14.T,h17.T,h20.T,h3.T, h6.T,h9.T,h12.T,h15.T,h18.T,h21.T),axis=0)
+    return(createCluster(data))
