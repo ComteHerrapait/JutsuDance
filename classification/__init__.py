@@ -65,13 +65,14 @@ def createFeatureVector(image):
     """Return feature vector of image""" 
     imseg=segmenatationMain(image)
     h=hog(imseg.astype(np.uint8))
-    s=surface(imseg)
-    o=orientation(imseg)
+    #s=surface(imseg)
+    #o=orientation(imseg)
     #cw=wavelet(image)
     #add more feature if needed
-    fv=np.concatenate((h[100:-1],[[s]],[[np.size(image[:,:,0])]],[[o]]),axis=0)
-    return(fv)
-    #return(h)
+    #fv=np.concatenate((h[100:-1],[[s]],[[np.size(image[:,:,0])]],[[o]]),axis=0)
+    #fv=np.concatenate(([[s]],[[np.size(image[:,:,0])]],[[o]]),axis=0)
+    #return(fv)
+    return(h)
     
 def wavelet(image):
     taille=(64,64)
