@@ -7,6 +7,20 @@ Created on Sun May 17 14:16:11 2020
 import cv2
 import numpy as np
 import classification as cl
+import matplotlib.pyplot as plt
+import sys
+
+
+# img1=cv2.imread('8.jpg')
+# img1=cl.segmenatationMain(img1)
+# #sklt=cl.find_skeleton2(img1.astype(np.uint8))
+# #plt.imshow(sklt[0])
+# print(cl.orientation(img1))
+# sys.exit()
+
+
+
+
 
 
 
