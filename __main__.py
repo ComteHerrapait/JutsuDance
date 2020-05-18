@@ -11,6 +11,8 @@ from hog import *
 class Interface(QtWidgets.QMainWindow):
     webcam = cv2.VideoCapture(0,cv2.CAP_ANY)
     cameraIndex = 0
+    mainX = 60
+    mainY = 60
     
     def __init__(self):
         """constrcteur"""
@@ -47,21 +49,24 @@ class Interface(QtWidgets.QMainWindow):
         
             #vérifie que l'image est bien capturée
         if not frameBGR is None and len(frameBGR) != 0: 
-               
-                #redimensionne l'image autour de la main (Partie Arthur)
             frame =        cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
-            image =        QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
-            frameTemp =    pretraitement(frame)
+            
+                #redimensionne l'image autour de la main (Partie Arthur)
+            frameTemp, self.mainY, self.mainX = pretraitement(frame, 
+                                                              self.mainY, 10, 
+                                                              self.mainX, 10)
             frameCrop =    frameTemp.copy()#necessaire pour eviter des problèmes de conversion
-            imageCrop =    QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
                 
                 #classification (Partie Jean-Baptiste)
-            #featureVector = createFeatureVector(frameCrop)
-            #centers =       createCluster(featureVector)
-            #indice  =       findcluster(featureVector, centers)
-            imageClass = imageCrop
+            # featureVector = createFeatureVector(frameCrop)
+            # centers =       createCluster(featureVector)
+            # indice  =       findcluster(featureVector, centers)
+            
             
                 #Affiche sur l'interface
+            image =      QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
+            imageCrop =  QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
+            imageClass = imageCrop
             self.display(image, imageCrop, imageClass)
             
     def changeInput(self,cameraIndex):

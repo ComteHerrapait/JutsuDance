@@ -61,7 +61,7 @@ def pretraitement(frame, p, q, r, s):
       
     # Extract hand 
     main = frame[y:y+100,x:x+100]
-    return(main, y, 10, x, 10)
+    return main, y, x
       
     # destroy all opened windows 
     cv2.destroyAllWindows()
