@@ -41,6 +41,9 @@ class Camera():
         self.webcam.set(3,width) # 3 : format de l'image en largeur
         check, img = self.webcam.read()
 
+        if not check :
+            return False
+        
         if space=='HSV':
             imgHSV=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             return(imgHSV)
@@ -65,6 +68,8 @@ class Camera():
         imgBGR=cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename=(name+'.jpg'), img=imgBGR)
 
+    def quit(self):
+        self.webcam.release()
+
     def __del__(self):
         """desructor"""
-
