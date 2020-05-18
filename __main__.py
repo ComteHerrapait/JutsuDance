@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5 import uic
 import sys
 
-from classification import *
+from classification import createFeatureVector, createCluster, findcluster
 from pretraitement import pretraitement
 from hog import *
 
@@ -34,25 +34,34 @@ class Interface(QtWidgets.QMainWindow):
         self.webcam.set(3,640) # 3 : format de l'image en largeur
 
 
-    def display(self,image1,image2):
+    def display(self,image1,image2, image3):
         """affiche une image dans le label au centre de l'interface"""   
         self.label.setPixmap(QtGui.QPixmap.fromImage(image1))
         self.label2.setPixmap(QtGui.QPixmap.fromImage(image2))
+        self.label3.setPixmap(QtGui.QPixmap.fromImage(image3))
 
     def update(self):
         """ mets à jour l'affichage sur l'interface"""      
         #frame = self.camera.acq("RGB") #récupère l'image depuis la camera
         check, frameBGR = self.webcam.read()  
         
+            #vérifie que l'image est bien capturée
         if not frameBGR is None and len(frameBGR) != 0: 
-               #vérifie que l'image est bien capturée
-            frame =             cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
-            image =             QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
-            frameProcessed =    pretraitement(frame)
-            frame2 =            frameProcessed.copy()#necessaire pour eviter des problèmes de conversion
-            imageProcessed =    QtGui.QImage(frame2 ,frame2.shape[1],frame2.shape[0],frame2.strides[0], QtGui.QImage.Format_RGB888)
-            
-            self.display(image, imageProcessed)
+               
+                #redimensionne l'image autour de la main (Partie Arthur)
+            frame =        cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
+            image =        QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
+            frameTemp =    pretraitement(frame)
+            frameCrop =    frameTemp.copy()#necessaire pour eviter des problèmes de conversion
+            imageCrop =    QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
+                
+                #classification (Partie Jean-Baptiste)
+            featureVector = createFeatureVector(frameCrop)
+            centers =       createCluster(featureVector)
+            indice  =       findcluster(featureVector, centers)
+                
+                #Affiche sur l'interface
+            self.display(image, imageCrop, imageClass)
             
     def changeInput(self,cameraIndex):
         """change la camera utilisée"""
