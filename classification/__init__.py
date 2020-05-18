@@ -61,13 +61,13 @@ def hog(img,SizeWind=16) :
     return hog.compute(img)
 
 def createFeatureVector(image):
-    """Return feature vector of image"""
+    """Return feature vector of image""" 
     imseg=segmenatationMain(image)
-    h=100*hog(imseg.astype(np.uint8))
+    h=hog(imseg.astype(np.uint8))
     s=surface(imseg)
-    cw=wavelet(image)
+    #cw=wavelet(image)
     #add more feature if needed
-    return(np.concatenate((h[100:-1],[[s]],cw),axis=0))
+    return(np.concatenate((h[100:-1],[[s]],[[np.size(image[:,:,0])*0.01]]),axis=0))
     return(h)
     
 def wavelet(image):
