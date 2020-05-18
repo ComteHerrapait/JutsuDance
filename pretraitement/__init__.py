@@ -8,12 +8,11 @@ Created on Tue May  5 10:10:18 2020
 import numpy as np 
 import cv2
 
-def pretraitement(frame):    
+def pretraitement(frame, p, q, r, s):    
        
     # set the region for the 
     # tracking window p, q, r, s 
     # put values according to yourself 
-    p, q, r, s = 60, 10, 60, 10
     track_window = (r, p, s, q) 
        
           
@@ -54,15 +53,15 @@ def pretraitement(frame):
     bp_YCbCr = cv2.calcBackProject([YCbCr], [1], roi_YCbCr, [0, 180], 1) 
        
     # applying meanshift to get the new region 
-    #_, track_window = cv2.meanShift(bp_hsv, track_window, termination)
-    _, track_window = cv2.meanShift(bp_YCbCr, track_window, termination)
+    _, track_window = cv2.meanShift(bp_hsv, track_window, termination)
+    #_, track_window = cv2.meanShift(bp_YCbCr, track_window, termination)
        
     # Draw track window on the frame 
     x, y, w, h = track_window 
       
     # Extract hand 
     main = frame[y:y+100,x:x+100]
-    return(main)
+    return(main, y, 10, x, 10)
       
     # destroy all opened windows 
     cv2.destroyAllWindows()
