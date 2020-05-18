@@ -36,6 +36,7 @@ def segmenatationMain(image):
     image_seg=np.where(lblsAll==k,1,0)      
     image_seg=np.reshape(image_seg,taille)
     return(image_seg)
+    #return(np.reshape(lblsAll,taille))
 
 def surface(im_seg):
     """Calcul de la surface de la main"""
@@ -64,10 +65,13 @@ def createFeatureVector(image):
     """Return feature vector of image""" 
     imseg=segmenatationMain(image)
     h=hog(imseg.astype(np.uint8))
-    s=surface(imseg)
+    #s=surface(imseg)
+    #o=orientation(imseg)
     #cw=wavelet(image)
     #add more feature if needed
-    return(np.concatenate((h[100:-1],[[s]],[[np.size(image[:,:,0])*0.01]]),axis=0))
+    #fv=np.concatenate((h[100:-1],[[s]],[[np.size(image[:,:,0])]],[[o]]),axis=0)
+    #fv=np.concatenate(([[s]],[[np.size(image[:,:,0])]],[[o]]),axis=0)
+    #return(fv)
     return(h)
     
 def wavelet(image):
@@ -125,3 +129,35 @@ def initcluster():
     h21=createFeatureVector(img21)
     data=np.concatenate((h1.T, h4.T,h7.T,h10.T,h13.T,h16.T,h19.T,h2.T, h5.T,h8.T,h11.T,h14.T,h17.T,h20.T,h3.T, h6.T,h9.T,h12.T,h15.T,h18.T,h21.T),axis=0)
     return(createCluster(data))
+
+def find_skeleton2(img):
+    skeleton = np.zeros(img.shape,np.uint8)
+    eroded = np.zeros(img.shape,np.uint8)
+    temp = np.zeros(img.shape,np.uint8)
+
+    #_,thresh = cv2.threshold(img,127,255,0)
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS,(5,5))
+    thresh=img
+    iters = 0
+    while(True):
+        cv2.erode(thresh, kernel, eroded)
+        cv2.dilate(eroded, kernel, temp)
+        cv2.subtract(thresh, temp, temp)
+        cv2.bitwise_or(skeleton, temp, skeleton)
+        thresh = eroded.copy()
+
+        iters += 1
+        if cv2.countNonZero(thresh) == 0:
+            return (skeleton,iters)
+
+def moment(image):
+    return(cv2.moments(image))
+    
+def orientation(imseg):
+    mms=moment(imseg.astype(np.uint8))
+    x,y=mms['m10']/mms['m00'],mms['m01']/mms['m00']
+    a=mms['m20']/mms['m00']-x**2
+    b=2*(mms['m11']/mms['m00']-x*y)
+    c=mms['m02']/mms['m00']-y**2
+    return(0.5*np.arctan(b/(a-c)))
