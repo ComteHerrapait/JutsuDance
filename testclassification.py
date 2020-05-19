@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 
 
 
-img=cv2.imread('capture.jpg')
-img1=cl.segmenatationMain(img)
-plt.imshow(img1)
+# img=cv2.imread('capture.jpg')
+# img1=cl.segmenatationMain(img)
+# plt.imshow(img1)
 
-# img=cv2.cvtColor(cv2.imread('capture.jpg'),cv2.COLOR_BGR2LAB)
-# plt.imshow(img)
+img=cv2.cvtColor(cv2.imread('capture.jpg'),cv2.COLOR_BGR2LAB)
+plt.imshow(img)
 
 plt.show()
 sys.exit()
