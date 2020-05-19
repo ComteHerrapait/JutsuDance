@@ -85,27 +85,27 @@ def wavelet(image):
     
 
 def initcluster():
-    img1=cv2.cvtColor(cv2.imread('base images crop/1.jpg'), cv2.COLOR_BGR2LAB)
-    img2=cv2.cvtColor(cv2.imread('base images crop/2.jpg'), cv2.COLOR_BGR2LAB)
-    img3=cv2.cvtColor(cv2.imread('base images crop/3.jpg'), cv2.COLOR_BGR2LAB)
-    img4=cv2.cvtColor(cv2.imread('base images crop/4.jpg'), cv2.COLOR_BGR2LAB)
-    img5=cv2.cvtColor(cv2.imread('base images crop/5.jpg'), cv2.COLOR_BGR2LAB)
-    img6=cv2.cvtColor(cv2.imread('base images crop/6.jpg'), cv2.COLOR_BGR2LAB)
-    img7=cv2.cvtColor(cv2.imread('base images crop/7.jpg'), cv2.COLOR_BGR2LAB)
-    img8=cv2.cvtColor(cv2.imread('base images crop/8.jpg'), cv2.COLOR_BGR2LAB)
-    img9=cv2.cvtColor(cv2.imread('base images crop/9.jpg'), cv2.COLOR_BGR2LAB)
-    img10=cv2.cvtColor(cv2.imread('base images crop/10.jpg'), cv2.COLOR_BGR2LAB)
-    img11=cv2.cvtColor(cv2.imread('base images crop/11.jpg'), cv2.COLOR_BGR2LAB)
-    img12=cv2.cvtColor(cv2.imread('base images crop/12.jpg'), cv2.COLOR_BGR2LAB)
-    img13=cv2.cvtColor(cv2.imread('base images crop/13.jpg'), cv2.COLOR_BGR2LAB)
-    img14=cv2.cvtColor(cv2.imread('base images crop/14.jpg'), cv2.COLOR_BGR2LAB)
-    img15=cv2.cvtColor(cv2.imread('base images crop/15.jpg'), cv2.COLOR_BGR2LAB)
-    img16=cv2.cvtColor(cv2.imread('base images crop/16.jpg'), cv2.COLOR_BGR2LAB)
-    img17=cv2.cvtColor(cv2.imread('base images crop/17.jpg'), cv2.COLOR_BGR2LAB)
-    img18=cv2.cvtColor(cv2.imread('base images crop/18.jpg'), cv2.COLOR_BGR2LAB)
-    img19=cv2.cvtColor(cv2.imread('base images crop/19.jpg'), cv2.COLOR_BGR2LAB)
-    img20=cv2.cvtColor(cv2.imread('base images crop/20.jpg'), cv2.COLOR_BGR2LAB)
-    img21=cv2.cvtColor(cv2.imread('base images crop/21.jpg'), cv2.COLOR_BGR2LAB)
+    img1=cv2.imread('1.jpg')
+    img2=cv2.imread('2.jpg')
+    img3=cv2.imread('3.jpg')
+    img4=cv2.imread('4.jpg')
+    img5=cv2.imread('5.jpg')
+    img6=cv2.imread('6.jpg')
+    img7=cv2.imread('7.jpg')
+    img8=cv2.imread('8.jpg')
+    img9=cv2.imread('9.jpg')
+    img10=cv2.imread('10.jpg')
+    img11=cv2.imread('11.jpg')
+    img12=cv2.imread('12.jpg')
+    img13=cv2.imread('13.jpg')
+    img14=cv2.imread('14.jpg')
+    img15=cv2.imread('15.jpg')
+    img16=cv2.imread('16.jpg')
+    img17=cv2.imread('17.jpg')
+    img18=cv2.imread('18.jpg')
+    img19=cv2.imread('19.jpg')
+    img20=cv2.imread('20.jpg')
+    img21=cv2.imread('21.jpg')
     h1=createFeatureVector(img1)    
     h2=createFeatureVector(img2)
     h3=createFeatureVector(img3)
@@ -128,7 +128,16 @@ def initcluster():
     h20=createFeatureVector(img20)
     h21=createFeatureVector(img21)
     data=np.concatenate((h1.T, h4.T,h7.T,h10.T,h13.T,h16.T,h19.T,h2.T, h5.T,h8.T,h11.T,h14.T,h17.T,h20.T,h3.T, h6.T,h9.T,h12.T,h15.T,h18.T,h21.T),axis=0)
-    return(createCluster(data))
+    cluster1=createCluster(data)
+    cluster2=np.zeros(np.shape(cluster1))
+    cluster2[0]=cluster1[findcluster(h1.T,cluster1)]
+    cluster2[1]=cluster1[findcluster(h4.T,cluster1)]
+    cluster2[2]=cluster1[findcluster(h7.T,cluster1)]
+    cluster2[3]=cluster1[findcluster(h10.T,cluster1)]
+    cluster2[4]=cluster1[findcluster(h13.T,cluster1)]
+    cluster2[5]=cluster1[findcluster(h16.T,cluster1)]
+    cluster2[6]=cluster1[findcluster(h19.T,cluster1)]
+    return(cluster2)
 
 def find_skeleton2(img):
     skeleton = np.zeros(img.shape,np.uint8)
