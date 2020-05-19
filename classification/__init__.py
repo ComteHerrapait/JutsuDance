@@ -32,8 +32,8 @@ def segmenatationMain(image):
     ms=MeanShift(bdw,bin_seeding=True,n_jobs=-1,min_bin_freq=20)
     ms.fit(data)
     lblsAll=ms.labels_
-    #k=ms.predict(np.reshape([150,170],(1,-1)))
-    k=ms.predict(np.reshape([140,140],(1,-1)))
+    k=ms.predict(np.reshape([150,170],(1,-1)))
+    #k=ms.predict(np.reshape([140,140],(1,-1)))
     image_seg=np.where(lblsAll==k,1,0)      
     image_seg=np.reshape(image_seg,taille)
     return(image_seg)
