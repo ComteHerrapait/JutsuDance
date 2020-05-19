@@ -7,6 +7,8 @@ import sys
 from classification import createFeatureVector, createCluster, findcluster, initcluster
 from pretraitement import pretraitement
 from hog import *
+from threading import Thread
+from multiprocessing import Process
 
 class Interface(QtWidgets.QMainWindow):
     webcam = cv2.VideoCapture(0,cv2.CAP_ANY)
@@ -19,6 +21,9 @@ class Interface(QtWidgets.QMainWindow):
     imagePreview =  [webcam.read()[1], QtGui.QImage()] # [frame, image]
     imageCrop =     [webcam.read()[1], QtGui.QImage()]
     imageClass =    [webcam.read()[1], QtGui.QImage()]
+    
+    front = Process(target=lambda : print("go"))
+    back =  Process(target=lambda : print("go"))
     
     def __init__(self):
         """constructeur"""
@@ -34,11 +39,11 @@ class Interface(QtWidgets.QMainWindow):
 
         #timer responsable du rafraichissement de l'interface
         self.timerFront = QtCore.QTimer()
-        self.timerFront.timeout.connect(self.updateFront)
+        self.timerFront.timeout.connect(self.front_threaded)
         self.timerFront.start(0)
         
         self.timerBack = QtCore.QTimer()
-        self.timerBack.timeout.connect(self.updateBack)
+        self.timerBack.timeout.connect(self.back_threaded)
         self.timerBack.start(0)
         
         #taille de la capture camera
@@ -67,9 +72,23 @@ class Interface(QtWidgets.QMainWindow):
         self.label3.setPixmap(
             QtGui.QPixmap.fromImage(image3).scaled(100,100,QtCore.Qt.KeepAspectRatio)
             )
-
+        
+    def front_threaded(self):
+        print("0 start\tFront Thread")
+        self.front.join()
+        self.front = Process(target=self.updateFront)
+        self.front.start()
+        print("0 end\tFront Thread")
+        
+    def back_threaded(self):
+        print("1 start\tBack Thread")
+        self.back.join()
+        self.back = Process(target=self.updateBack)
+        self.back.start()
+        print("1 end\tBack Thread")
+        
     def updateFront(self):
-        """ mets à jour l'affichage sur l'interface et récupère le flux de la camera"""      
+        """ mets à jour l'affichage sur l'interface et récupère le flux de la camera"""
         check, frameBGR = self.webcam.read()
             #vérifie que l'image est bien capturée
         if check and not frameBGR is None and len(frameBGR) != 0: 
@@ -93,6 +112,7 @@ class Interface(QtWidgets.QMainWindow):
             featureVector = createFeatureVector(frameCrop)
             indice  =       findcluster(featureVector.T, self.centers)
             frameClass =    self.imagesSignes[indice]
+            
                 #conversion en images
             self.imageCrop = [frameCrop, QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)]
             self.imageClass = [frameClass, QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)]
@@ -121,7 +141,7 @@ class Interface(QtWidgets.QMainWindow):
         print("utilise maintenant la camera : ", self.cameraIndex)
 
     def save(self):
-        imgBGR=cv2.cvtColor(self.image, cv2.COLOR_RGB2BGR)
+        imgBGR=cv2.cvtColor(self.imagePreview[1], cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename=("capture.jpg"), img=imgBGR)
         print("image sauvegardée dans capture.jpg")
 
