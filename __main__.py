@@ -15,6 +15,7 @@ class Interface(QtWidgets.QMainWindow):
     mainY = 60
     preview = webcam.read()[1]
     centers = initcluster()
+    imagesSignes = []
     
     def __init__(self):
         """constructeur"""
@@ -36,6 +37,15 @@ class Interface(QtWidgets.QMainWindow):
         #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
         self.webcam.set(3,640) # 3 : format de l'image en largeur
+        
+        #stockage de la base d'image dans un vecteur
+        for i in range(1,22,3):
+            path = 'base images crop/'+str(i)+'.jpg'
+            frame = cv2.cvtColor(
+                cv2.imread(path),
+                cv2.COLOR_BGR2RGB)
+            self.imagesSignes.append(frame)
+            
         print("initialisation terminée")
 
 
@@ -70,8 +80,7 @@ class Interface(QtWidgets.QMainWindow):
                 #classification (Partie Jean-Baptiste)
             featureVector = createFeatureVector(frameCrop)
             indice  =       findcluster(featureVector.T, self.centers)
-            i = (indice + 1) * 3 - 2
-            frameClass =    cv2.cvtColor(cv2.imread('base images crop/'+str(i)+'.jpg'), cv2.COLOR_BGR2RGB)
+            frameClass =    self.imagesSignes[indice]
             
                 #Affiche sur l'interface
             image =      QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
@@ -99,8 +108,7 @@ class Interface(QtWidgets.QMainWindow):
             
             #sinon, repasse à la première
         elif self.changeInput(0):
-            self.cameraIndex = 0
-            
+            self.cameraIndex = 0    
         print("utilise maintenant la camera : ", self.cameraIndex)
 
     def save(self):
@@ -119,5 +127,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = Interface()
     window.show()
-    sys.exit(app.exec_())
+    print("arret avec code ",app.exec_())
+    I = window.imagesSignes
+    sys.exit()
 
