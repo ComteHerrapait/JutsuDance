@@ -13,9 +13,12 @@ class Interface(QtWidgets.QMainWindow):
     cameraIndex = 0
     mainX = 60
     mainY = 60
-    preview = webcam.read()[1]
     centers = initcluster()
     imagesSignes = []
+    
+    imagePreview =  [webcam.read()[1], QtGui.QImage()] # [frame, image]
+    imageCrop =     [webcam.read()[1], QtGui.QImage()]
+    imageClass =    [webcam.read()[1], QtGui.QImage()]
     
     def __init__(self):
         """constructeur"""
@@ -30,9 +33,13 @@ class Interface(QtWidgets.QMainWindow):
         self.buttonSave.released.connect(self.save)
 
         #timer responsable du rafraichissement de l'interface
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.update)
-        self.timer.start(0)
+        self.timerFront = QtCore.QTimer()
+        self.timerFront.timeout.connect(self.updateFront)
+        self.timerFront.start(0)
+        
+        self.timerBack = QtCore.QTimer()
+        self.timerBack.timeout.connect(self.updateBack)
+        self.timerBack.start(0)
         
         #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
@@ -61,17 +68,23 @@ class Interface(QtWidgets.QMainWindow):
             QtGui.QPixmap.fromImage(image3).scaled(100,100,QtCore.Qt.KeepAspectRatio)
             )
 
-    def update(self):
-        """ mets à jour l'affichage sur l'interface"""      
-        check, frameBGR = self.webcam.read()  
-        
+    def updateFront(self):
+        """ mets à jour l'affichage sur l'interface et récupère le flux de la camera"""      
+        check, frameBGR = self.webcam.read()
             #vérifie que l'image est bien capturée
-        if not frameBGR is None and len(frameBGR) != 0: 
-            frame = cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
-            self.preview = frame.copy()
+        if check and not frameBGR is None and len(frameBGR) != 0: 
+            frameTemp = cv2.cvtColor(frameBGR, cv2.COLOR_BGR2RGB)
+            frame = frameTemp.copy()
+            self.imagePreview = [frame, 
+                                 QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)]
+            self.display(self.imagePreview[1], self.imageCrop[1], self.imageClass[1])
             
+    def updateBack(self):
+        """ mets à jour les images à afficher"""      
+        #vérifie que l'image est bien capturée
+        if not self.imagePreview[0] is None: 
                 #redimensionne l'image autour de la main (Partie Arthur)
-            frameTemp, self.mainY, self.mainX = pretraitement(frame, 
+            frameTemp, self.mainY, self.mainX = pretraitement(self.imagePreview[0], 
                                                               self.mainY, 200, 
                                                               self.mainX, 200)
             frameCrop =    frameTemp.copy()#necessaire pour eviter des problèmes de conversion
@@ -80,12 +93,9 @@ class Interface(QtWidgets.QMainWindow):
             featureVector = createFeatureVector(frameCrop)
             indice  =       findcluster(featureVector.T, self.centers)
             frameClass =    self.imagesSignes[indice]
-            
-                #Affiche sur l'interface
-            image =      QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
-            imageCrop =  QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
-            imageClass = QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)
-            self.display(image, imageCrop, imageClass)
+                #conversion en images
+            self.imageCrop = [frameCrop, QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)]
+            self.imageClass = [frameClass, QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)]
             
     def changeInput(self,cameraIndex):
         """change la camera utilisée"""
@@ -111,7 +121,7 @@ class Interface(QtWidgets.QMainWindow):
         print("utilise maintenant la camera : ", self.cameraIndex)
 
     def save(self):
-        imgBGR=cv2.cvtColor(self.preview, cv2.COLOR_RGB2BGR)
+        imgBGR=cv2.cvtColor(self.image, cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename=("capture.jpg"), img=imgBGR)
         print("image sauvegardée dans capture.jpg")
 
