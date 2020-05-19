@@ -5,8 +5,9 @@ from PyQt5 import uic
 import sys
 import cv2
 import numpy as np
+from matplotlib import pyplot as mpl
 
-from classification import createFeatureVector, createCluster, findcluster, initcluster, segmenatationMain, hog
+from classification import findcluster, initcluster, segmenatationMain, hog
 from pretraitement import pretraitement
 
 class Interface(QtWidgets.QMainWindow):
@@ -17,6 +18,7 @@ class Interface(QtWidgets.QMainWindow):
     preview = webcam.read()[1]
     centers = initcluster()
     imagesSignes = []
+    DEBUG = 0
     
     def __init__(self):
         """constructeur"""
@@ -33,7 +35,7 @@ class Interface(QtWidgets.QMainWindow):
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
-        self.timer.start(0)
+        self.timer.start(500)
         
         #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
@@ -50,7 +52,7 @@ class Interface(QtWidgets.QMainWindow):
         print("initialisation terminée")
 
 
-    def display(self,image1,image2, image3):
+    def display(self,image1,image2, image3, image4):
         """affiche une image dans le label au centre de l'interface"""   
         self.label.setPixmap(
             QtGui.QPixmap.fromImage(image1).scaled(640,400,QtCore.Qt.KeepAspectRatio)
@@ -60,6 +62,9 @@ class Interface(QtWidgets.QMainWindow):
             )
         self.label3.setPixmap(
             QtGui.QPixmap.fromImage(image3).scaled(100,100,QtCore.Qt.KeepAspectRatio)
+            )
+        self.label4.setPixmap(
+            QtGui.QPixmap.fromImage(image4).scaled(100,100,QtCore.Qt.KeepAspectRatio)
             )
 
     def update(self):
@@ -79,17 +84,19 @@ class Interface(QtWidgets.QMainWindow):
                 
                 #classification (Partie Jean-Baptiste)
             frameSeg =      segmenatationMain(frameCrop)
+            
             featureVector = hog(frameSeg.astype(np.uint8))
             indice  =       findcluster(featureVector.T, self.centers)
             frameClass =    self.imagesSignes[indice]
             
                 #Affiche sur l'interface
-            frame =  cv2.rectangle(frame, (self.mainX,self.mainY), (self.mainX+200,self.mainY+200), 255,2)
+            frame =  cv2.rectangle(frame, (self.mainX,self.mainY), (self.mainX+200,self.mainY+200), 255,2)#trace un rectangle rouge
             image =      QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
             imageCrop =  QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
-            imageSeg =   QtGui.QImage(frameSeg ,frameSeg.shape[1],frameSeg.shape[0],frameSeg.strides[0], QtGui.QImage.Format_RGB888)
+            imageSeg =   QtGui.QImage(frameSeg ,frameSeg.shape[1],frameSeg.shape[0],frameSeg.strides[0], QtGui.QImage.Format_Mono)
             imageClass = QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)
-            self.display(image, imageSeg, imageClass)
+            self.display(image, imageCrop, imageSeg, imageClass)
+            self.DEBUG = imageSeg
             
     def changeInput(self,cameraIndex):
         """change la camera utilisée"""
@@ -131,6 +138,6 @@ if __name__ == "__main__":
     window = Interface()
     window.show()
     print("arret avec code ",app.exec_())
-    I = window.imagesSignes
+    I = window.DEBUG
     sys.exit()
 
