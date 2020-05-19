@@ -19,7 +19,7 @@ class Interface(QtWidgets.QMainWindow):
     
     def __init__(self):
         """constructeur"""
-        print("valeurs initialisées")
+        print("attributs initialisés")
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("interface.ui", self)
         
