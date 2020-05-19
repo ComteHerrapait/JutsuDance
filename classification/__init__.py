@@ -62,9 +62,9 @@ def hog(img,SizeWind=16) :
     hog = cv2.HOGDescriptor(winSize,blockSize,blockStride,cellSize,nbins)
     return hog.compute(img)
 
-def createFeatureVector(imseg):
+def createFeatureVector(image):
     """Return feature vector of image""" 
-    #imseg=segmenatationMain(image)
+    imseg=segmenatationMain(image)
     h=hog(imseg.astype(np.uint8))
     #s=surface(imseg)
     #o=orientation(imseg)
