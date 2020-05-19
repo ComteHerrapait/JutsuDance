@@ -32,7 +32,7 @@ class Interface(QtWidgets.QMainWindow):
         #timer responsable du rafraichissement de l'interface
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
-        self.timer.start(30)
+        self.timer.start(0)
         
         #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
@@ -63,7 +63,6 @@ class Interface(QtWidgets.QMainWindow):
 
     def update(self):
         """ mets à jour l'affichage sur l'interface"""      
-        #frame = self.camera.acq("RGB") #récupère l'image depuis la camera
         check, frameBGR = self.webcam.read()  
         
             #vérifie que l'image est bien capturée
