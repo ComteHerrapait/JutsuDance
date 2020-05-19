@@ -3,10 +3,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5 import uic
 import sys
+import cv2
+import numpy as np
 
-from classification import createFeatureVector, createCluster, findcluster, initcluster
+from classification import createFeatureVector, createCluster, findcluster, initcluster, segmenatationMain, hog
 from pretraitement import pretraitement
-from hog import *
 
 class Interface(QtWidgets.QMainWindow):
     webcam = cv2.VideoCapture(0,cv2.CAP_ANY)
@@ -77,15 +78,18 @@ class Interface(QtWidgets.QMainWindow):
             frameCrop =    frameTemp.copy()#necessaire pour eviter des problèmes de conversion
                 
                 #classification (Partie Jean-Baptiste)
-            featureVector = createFeatureVector(frameCrop)
+            frameSeg =      segmenatationMain(frameCrop)
+            featureVector = hog(frameSeg.astype(np.uint8))
             indice  =       findcluster(featureVector.T, self.centers)
             frameClass =    self.imagesSignes[indice]
             
                 #Affiche sur l'interface
+            frame =  cv2.rectangle(frame, (self.mainX,self.mainY), (self.mainX+200,self.mainY+200), 255,2)
             image =      QtGui.QImage(frame,frame.shape[1],frame.shape[0],frame.strides[0],QtGui.QImage.Format_RGB888)#adapte le format à l'affichage
             imageCrop =  QtGui.QImage(frameCrop ,frameCrop.shape[1],frameCrop.shape[0],frameCrop.strides[0], QtGui.QImage.Format_RGB888)
+            imageSeg =   QtGui.QImage(frameSeg ,frameSeg.shape[1],frameSeg.shape[0],frameSeg.strides[0], QtGui.QImage.Format_RGB888)
             imageClass = QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)
-            self.display(image, imageCrop, imageClass)
+            self.display(image, imageSeg, imageClass)
             
     def changeInput(self,cameraIndex):
         """change la camera utilisée"""
