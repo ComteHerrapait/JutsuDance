@@ -1,0 +1,3 @@
+{
+    "files": ["hog/__init__.py","acquisition/__init__.py","__main__.py","interface.ui","pretraitement/__init__.py","pretraitement/_init_.py","classification/_init_.py","classification/__init__.py"]
+}
