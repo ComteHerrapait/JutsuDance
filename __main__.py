@@ -10,6 +10,19 @@ from hog import *
 from threading import Thread
 from multiprocessing import Process
 
+class worker():
+    def front_threaded(obj):
+        print("front\start")
+        while True :
+            obj.updateFront()
+        print("front\tstop")
+        
+    def back_threaded(obj):
+        print("back\tstart")
+        while True :
+            obj.updateBack()
+        print("back\tstop")
+    
 class Interface(QtWidgets.QMainWindow):
     webcam = cv2.VideoCapture(0,cv2.CAP_ANY)
     cameraIndex = 0
@@ -22,9 +35,9 @@ class Interface(QtWidgets.QMainWindow):
     imageCrop =     [webcam.read()[1], QtGui.QImage()]
     imageClass =    [webcam.read()[1], QtGui.QImage()]
     
-    front = Process(target=lambda : print("go"))
-    back =  Process(target=lambda : print("go"))
-    
+    front = Process()
+    back =  Process()
+
     def __init__(self):
         """constructeur"""
         print("attributs initialisés")
@@ -38,13 +51,13 @@ class Interface(QtWidgets.QMainWindow):
         self.buttonSave.released.connect(self.save)
 
         #timer responsable du rafraichissement de l'interface
-        self.timerFront = QtCore.QTimer()
-        self.timerFront.timeout.connect(self.front_threaded)
-        self.timerFront.start(0)
+        # self.timerFront = QtCore.QTimer()
+        # self.timerFront.timeout.connect(self.front_threaded)
+        # self.timerFront.start(1000)
         
-        self.timerBack = QtCore.QTimer()
-        self.timerBack.timeout.connect(self.back_threaded)
-        self.timerBack.start(0)
+        # self.timerBack = QtCore.QTimer()
+        # self.timerBack.timeout.connect(self.back_threaded)
+        # self.timerBack.start(1000)
         
         #taille de la capture camera
         self.webcam.set(4,400) # 4 : format de l'image en hauteur
@@ -59,6 +72,13 @@ class Interface(QtWidgets.QMainWindow):
             self.imagesSignes.append(frame)
             
         print("initialisation terminée")
+        
+        #démarrage des Threads
+        W = worker()
+        front = Process(target=W.front_threaded,args=(self,))
+        back =  Process(target=W.back_threaded,args=(self,))
+        front.start()
+        back.start()
 
 
     def display(self,image1,image2, image3):
@@ -73,22 +93,11 @@ class Interface(QtWidgets.QMainWindow):
             QtGui.QPixmap.fromImage(image3).scaled(100,100,QtCore.Qt.KeepAspectRatio)
             )
         
-    def front_threaded(self):
-        print("0 start\tFront Thread")
-        self.front.join()
-        self.front = Process(target=self.updateFront)
-        self.front.start()
-        print("0 end\tFront Thread")
-        
-    def back_threaded(self):
-        print("1 start\tBack Thread")
-        self.back.join()
-        self.back = Process(target=self.updateBack)
-        self.back.start()
-        print("1 end\tBack Thread")
+
         
     def updateFront(self):
         """ mets à jour l'affichage sur l'interface et récupère le flux de la camera"""
+        print("front\tupdate")
         check, frameBGR = self.webcam.read()
             #vérifie que l'image est bien capturée
         if check and not frameBGR is None and len(frameBGR) != 0: 
@@ -99,7 +108,8 @@ class Interface(QtWidgets.QMainWindow):
             self.display(self.imagePreview[1], self.imageCrop[1], self.imageClass[1])
             
     def updateBack(self):
-        """ mets à jour les images à afficher"""      
+        """ mets à jour les images à afficher"""
+        print("back\tupdate")
         #vérifie que l'image est bien capturée
         if not self.imagePreview[0] is None: 
                 #redimensionne l'image autour de la main (Partie Arthur)
@@ -147,6 +157,8 @@ class Interface(QtWidgets.QMainWindow):
 
     def closeEvent(self,event):
         self.webcam.release()
+        self.front.join()
+        self.back.join()
         event.accept()
         
 if __name__ == "__main__":
