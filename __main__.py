@@ -18,7 +18,6 @@ class Interface(QtWidgets.QMainWindow):
     preview = webcam.read()[1]
     centers = initcluster()
     imagesSignes = []
-    DEBUG = 0
     
     def __init__(self):
         """constructeur"""
@@ -96,7 +95,6 @@ class Interface(QtWidgets.QMainWindow):
             imageSeg =   QtGui.QImage(frameSeg ,frameSeg.shape[1],frameSeg.shape[0],frameSeg.strides[0], QtGui.QImage.Format_Mono)
             imageClass = QtGui.QImage(frameClass ,frameClass.shape[1],frameClass.shape[0],frameClass.strides[0], QtGui.QImage.Format_RGB888)
             self.display(image, imageCrop, imageSeg, imageClass)
-            self.DEBUG = imageSeg
             
     def changeInput(self,cameraIndex):
         """change la camera utilisée"""
@@ -138,6 +136,5 @@ if __name__ == "__main__":
     window = Interface()
     window.show()
     print("arret avec code ",app.exec_())
-    I = window.DEBUG
     sys.exit()
 
