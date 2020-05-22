@@ -77,8 +77,8 @@ def tauxReussite(res):
     print("taux de réussite : ",100 * sum(reussites)/np.sum(res),"%")
         
 if __name__ == "__main__" :
-    TAILLE = 200
-    NOMBRE_TESTS = 10
+    TAILLE = 10
+    NOMBRE_TESTS = 25
     
     print('###\tbegin\t###')
     r = evaluationMultiple(NOMBRE_TESTS,TAILLE)
